@@ -1,23 +1,37 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
+import submitFormData from './submitFormData';
+
 function App() {
+
+  const [mapFields, setMapFields] = useState(
+    submitFormData.filter(field => !field.conditional)
+  );
+
+  const handleInputField = (e) => {
+    console.log(e.target.name, 'regular');
+  }
+
+  const handleBirthDataField = (e) => {
+    console.log(e.target.value, 'birthday')
+  }
+ 
+  const InputFields = mapFields.map((field)=>{
+    return (
+      <div key={field.name}>
+        <label htmlFor={field.name}>{field.human_label}</label> <br/>
+        <input type={field.type} name={field.name} onChange={field.name === 'date_of_birth' ? handleBirthDataField : handleInputField}></input>
+      </div>
+    )
+  });
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <form>
+      {InputFields}
+      <input type="submit"></input>
+    </form>
     </div>
   );
 }
