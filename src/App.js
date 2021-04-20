@@ -49,6 +49,7 @@ function App() {
   const handleOnSubmit = (e) => {
     e.preventDefault();
     console.log(inputFields);  // console.log out payload
+    alert("Submit Success")
   };
 
   const InputFields = inputFields.map((field) => {
