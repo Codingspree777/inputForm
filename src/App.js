@@ -24,10 +24,10 @@ function App() {
   const handleBirthDataField = (e) => {
     setDateValue(e.target.value);
     setMapFields(inputFields.map((field) => {
-      if (field.name === e.target.name) {
+      if (field.name === e.target.name || field.name === "parental_consent") {
         return {
           ...field,
-          textValue: e.target.value 
+          textValue: e.target.value
         }
       }
       return field;
@@ -48,8 +48,24 @@ function App() {
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
-    console.log(inputFields);  // console.log out payload
-    alert("Submit Success")
+
+    for (let i = 0; i < inputFields.length; i++) {
+      let item = inputFields[i];
+      //checking for all the input field, except parental consent
+      if (item.textValue === "" || !item.textValue) return alert("Missing one or more fields");
+
+      if (item.conditional) {
+        if (item.conditional.show_if(new Date(dateValue))) {
+          //checking if the parental consent is checked, if the birthdate is indeed 13 years current
+          item.parental_consent ? alert("Success with Parental Consent") : alert("Missing Parental Consent");
+        } else {
+          //success without Parental Consent needed
+          console.log(inputFields)
+          return alert("Submit form Success")
+        }
+      }
+    };
+
   };
 
   const InputFields = inputFields.map((field) => {
@@ -70,9 +86,9 @@ function App() {
             <input type={field.type} name={field.name} onClick={handleParentialConsent}></input>
           </div>
         )
-
       }
     }
+    return null;
   });
 
   return (
@@ -82,7 +98,7 @@ function App() {
         <form className="form">
           {InputFields}
           <div className="input-container">
-          <input type="submit" onClick={handleOnSubmit}></input>
+            <input type="submit" onClick={handleOnSubmit}></input>
           </div>
         </form>
       </div>
